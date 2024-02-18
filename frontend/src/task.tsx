@@ -1,3 +1,4 @@
+import { useState } from 'preact/hooks'
 import { Draggable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
@@ -10,6 +11,16 @@ const Container = styled.div`
 `
 
 export function Task(props) {
+  const [editing, setEditing] = useState(false)
+
+  const startEdit = () => {
+    setEditing(true)
+  }
+
+  const stopEdit = () => {
+    setEditing(false)
+  }
+
   return (
     <Draggable draggableId={props.task.id} index={props.index}>
       {provided => (
@@ -17,8 +28,18 @@ export function Task(props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
+          onClick={startEdit}
+          onBlur={stopEdit}
         >
-          {props.task.content}
+          {editing ? (
+            <input
+              type="text"
+              value={props.task.content}
+              autofocus
+            />
+          ) : (
+            props.task.content
+          )}
         </Container>
       )}
     </Draggable>
