@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks'
+import { useState, useEffect } from 'preact/hooks'
 import preactLogo from './assets/preact.svg'
 import viteLogo from '/vite.svg'
 import './app.css'
@@ -13,6 +13,14 @@ const Container = styled.div`
 
 export function App() {
   const [state, setState] = useState(initialData)
+
+  useEffect(() => {
+    fetch("<redacted>/api/test").then((res) =>
+      res.json().then((data) => {
+        setState(data)
+      })
+    )
+  }, [])
 
   const onDragEnd = result => {
     const { destination, source, draggableId } = result
