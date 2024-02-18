@@ -1,14 +1,15 @@
-import { useState, useRef } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import preactLogo from './assets/preact.svg'
 import viteLogo from '/vite.svg'
 import './app.css'
 import initialData from './initial-data'
 import { Column } from './column'
 import { DragDropContext } from 'react-beautiful-dnd'
+import styled from 'styled-components'
 
-const container = {
-  display: "flex",
-}
+const Container = styled.div`
+  display: flex;
+`
 
 export function App() {
   const [state, setState] = useState(initialData)
@@ -82,14 +83,14 @@ export function App() {
     <DragDropContext
       onDragEnd={onDragEnd}
     >
-      <div style={container}>
+      <Container>
         {state.columnOrder.map(columnId => {
           const column = state.columns[columnId]
           const tasks = column.taskIds.map(taskId => state.tasks[taskId])
 
           return <Column key={column.id} column={column} tasks={tasks} />
         })}
-      </div>
+      </Container>
     </DragDropContext>
   )
 }
