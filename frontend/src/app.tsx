@@ -15,7 +15,7 @@ export function App() {
   const [state, setState] = useState(initialData)
 
   useEffect(() => {
-    fetch("<redacted>/api/test").then((res) =>
+    fetch("http://localhost:5000/api/test").then((res) =>
       res.json().then((data) => {
         setState(data)
       })
