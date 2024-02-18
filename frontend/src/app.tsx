@@ -15,7 +15,7 @@ export function App() {
   const [state, setState] = useState(initialData)
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/test").then((res) =>
+    fetch("http://localhost:5000/getstate").then((res) =>
       res.json().then((data) => {
         setState(data)
       })
@@ -56,6 +56,14 @@ export function App() {
         }
       };
 
+      fetch("http://localhost:5000/updatestate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newState)
+      })
+
       setState(newState)
       return
     }
@@ -83,6 +91,14 @@ export function App() {
         [newFinish.id]: newFinish,
       }
     };
+
+    fetch("http://localhost:5000/updatestate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newState)
+    })
 
     setState(newState)
   }

@@ -1,48 +1,40 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import json, sys
 
 app = Flask(__name__)
 CORS(app)
 
-# TODO: Probably make this a dict or something for faster get with labels
-tasks = []
+state = {}
 
 class Task:
-    def __init__(self, title, labels):
-        self.title = title
+    def __init__(self, id, content, labels, column):
+        self.id = id
+        self.content = content
         self.labels = labels
+        self.column = column
+
+    def to_json(self):
+        return {"id": self.id, "content": self.content}
 
 @app.route("/")
 def home():
-  return "ayo bet"
+  return "Welcome to Syssla!"
 
-@app.route("/api/test")
-def test():
-    return jsonify({
-            "tasks": {
-                "task-1": { "id": "task-1", "content": "Take out garbage" },
-                "task-2": { "id": "task-2", "content": "Do the other thing" },
-                "task-3": { "id": "task-3", "content": "Don't do anything!" },
-            },
-            "columns": {
-                "column-1": {
-                    "id": "column-1",
-                    "title": "Backlog",
-                    "taskIds": ["task-1", "task-2", "task-3"],
-                },
-                "column-2": {
-                  "id": "column-2",
-                  "title": "Today",
-                  "taskIds": []
-                },
-                "column-3": {
-                  "id": "column-3",
-                  "title": "Tomorrow",
-                  "taskIds": []
-                }
-            },
-            "columnOrder": ["column-1", "column-2", "column-3"],
-        })
+@app.route("/getstate")
+def getstate():
+    return state
+
+@app.route("/updatestate", methods=["POST"])
+def updatestate():
+    global state
+
+    state = request.get_json()
+
+    with open("state.json", "w") as f:
+        json.dump(state, f, indent=4)
+
+    return "OK"
 
 @app.route("/addtask")
 def addtask():
@@ -74,4 +66,10 @@ def getlabels():
     return str(labels)
 
 if __name__ == "__main__":
-  app.run(debug=True)
+    try:
+        with open("state.json", "r") as f:
+            state = json.load(f)
+    except FileNotFoundError:
+        print("ERROR: Missing state.json")
+        sys.exit()
+    app.run(debug=True)

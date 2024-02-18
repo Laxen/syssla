@@ -1,0 +1,12 @@
+{
+    "tasks":
+    {
+    },
+    "columns":
+    {
+        "Backlog": {"id": "Backlog", "title": "Backlog", "taskIds": []},
+        "Today": {"id": "Today", "title": "Today", "taskIds": []},
+        "Tomorrow": {"id": "Tomorrow", "title": "Tomorrow", "taskIds": []}
+    },
+    "columnOrder": ["Backlog", "Today", "Tomorrow"]
+}
