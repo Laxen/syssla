@@ -5,7 +5,11 @@ export function Column(props) {
   const container = {
     margin: "8px",
     border: "1px solid lightgrey",
-    borderRadius: "2px"
+    borderRadius: "2px",
+    width: "220px",
+
+    display: "flex",
+    flexDirection: "column"
   }
 
   const title = {
@@ -13,7 +17,9 @@ export function Column(props) {
   }
 
   const tasklist = {
-    padding: "8px"
+    padding: "8px",
+    flexGrow: "1",
+    minHeight: "100px"
   }
 
   return (
