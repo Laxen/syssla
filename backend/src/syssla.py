@@ -5,6 +5,7 @@ import json, sys
 app = Flask(__name__)
 CORS(app)
 
+state_file = "src/state.json"
 state = {}
 
 class Task:
@@ -31,7 +32,7 @@ def updatestate():
 
     state = request.get_json()
 
-    with open("state.json", "w") as f:
+    with open(state_file, "w") as f:
         json.dump(state, f, indent=4)
 
     return "OK"
@@ -69,7 +70,7 @@ def main():
     global state
 
     try:
-        with open("syssla/state.json", "r") as f:
+        with open(state_file, "r") as f:
             state = json.load(f)
     except FileNotFoundError:
         print("ERROR: Missing state.json")
