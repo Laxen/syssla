@@ -65,11 +65,16 @@ def getlabels():
 
     return str(labels)
 
-if __name__ == "__main__":
+def main():
+    global state
+
     try:
-        with open("state.json", "r") as f:
+        with open("syssla/state.json", "r") as f:
             state = json.load(f)
     except FileNotFoundError:
         print("ERROR: Missing state.json")
         sys.exit()
     app.run(debug=True)
+
+if __name__ == "__main__":
+    main()
