@@ -13,5 +13,5 @@ poetry run start
 #### Frontend (localhost:5173)
 ```bash
 cd frontend
-npm run dev
+npm start
 ```
