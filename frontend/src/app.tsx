@@ -11,6 +11,21 @@ const Container = styled.div`
   display: flex;
 `
 
+const Button = styled.button`
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  &:hover {
+    border-color: #646cff;
+  }
+`
+
 export function App() {
   const [state, setState] = useState(initialData)
 
@@ -114,19 +129,21 @@ export function App() {
 
   return (
     <div>
-      <button onClick={newTask}>New Task</button>
-      <DragDropContext
-        onDragEnd={onDragEnd}
-      >
-        <Container>
-          {state.columnOrder.map(columnId => {
-            const column = state.columns[columnId]
-            const tasks = column.taskIds.map(taskId => state.tasks[taskId])
+      <Container>
+        <Button onClick={newTask}>New Task</Button>
+      </Container>
+        <DragDropContext
+          onDragEnd={onDragEnd}
+        >
+          <Container>
+            {state.columnOrder.map(columnId => {
+              const column = state.columns[columnId]
+              const tasks = column.taskIds.map(taskId => state.tasks[taskId])
 
-            return <Column key={column.id} column={column} tasks={tasks} />
-          })}
-        </Container>
-      </DragDropContext>
+              return <Column key={column.id} column={column} tasks={tasks} />
+            })}
+          </Container>
+        </DragDropContext>
     </div>
   )
 }
