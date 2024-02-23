@@ -14,12 +14,16 @@ const Container = styled.div`
 export function App() {
   const [state, setState] = useState(initialData)
 
-  useEffect(() => {
+  function getState() {
     fetch("http://localhost:5000/getstate").then((res) =>
       res.json().then((data) => {
         setState(data)
       })
     )
+  }
+
+  useEffect(() => {
+    getState()
   }, [])
 
   const onDragEnd = result => {
@@ -103,18 +107,26 @@ export function App() {
     setState(newState)
   }
 
-  return (
-    <DragDropContext
-      onDragEnd={onDragEnd}
-    >
-      <Container>
-        {state.columnOrder.map(columnId => {
-          const column = state.columns[columnId]
-          const tasks = column.taskIds.map(taskId => state.tasks[taskId])
+  function newTask() {
+    fetch("http://localhost:5000/addtask")
+    getState()
+  }
 
-          return <Column key={column.id} column={column} tasks={tasks} />
-        })}
-      </Container>
-    </DragDropContext>
+  return (
+    <div>
+      <button onClick={newTask}>New Task</button>
+      <DragDropContext
+        onDragEnd={onDragEnd}
+      >
+        <Container>
+          {state.columnOrder.map(columnId => {
+            const column = state.columns[columnId]
+            const tasks = column.taskIds.map(taskId => state.tasks[taskId])
+
+            return <Column key={column.id} column={column} tasks={tasks} />
+          })}
+        </Container>
+      </DragDropContext>
+    </div>
   )
 }

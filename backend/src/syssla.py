@@ -18,6 +18,12 @@ class Task:
     def to_json(self):
         return {"id": self.id, "content": self.content}
 
+def _write_state():
+    global state
+
+    with open(state_file, "w") as f:
+        json.dump(state, f, indent=4)
+
 @app.route("/")
 def home():
   return "Welcome to Syssla!"
@@ -31,40 +37,29 @@ def updatestate():
     global state
 
     state = request.get_json()
-
-    with open(state_file, "w") as f:
-        json.dump(state, f, indent=4)
+    _write_state()
 
     return "OK"
 
 @app.route("/addtask")
 def addtask():
-    title = request.args.get("title", "")
-    labels = request.args.get("labels", "").split(",")
+    state["taskCounter"] += 1
+    task_id = f"task-{state['taskCounter']}"
+    state["tasks"][task_id] = {"content": "New", "id": task_id}
+    state["columns"]["Backlog"]["taskIds"].insert(0, task_id)
 
-    if not title:
-        return "ERROR: Provide title"
-
-    tasks.append(Task(title, labels))
+    _write_state()
 
     return "OK"
 
-@app.route("/gettasks")
-def gettasks():
-    label = request.args.get("label", "")
+@app.route("/updatetask", methods=["POST"])
+def updatetask():
+    task = request.get_json()
+    state["tasks"][task["id"]] = task
 
-    ret = ""
-    for task in tasks:
-        if not label or label in task.labels:
-            ret += f"{task.title} ({','.join(task.labels)})\n"
+    _write_state()
 
-    return ret
-
-@app.route("/getlabels")
-def getlabels():
-    labels = set().union(*[task.labels for task in tasks])
-
-    return str(labels)
+    return "OK"
 
 def main():
     global state

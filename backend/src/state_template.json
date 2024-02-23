@@ -11,5 +11,6 @@
         "Today": {"id": "Today", "title": "Today", "taskIds": ["task-3"]},
         "Tomorrow": {"id": "Tomorrow", "title": "Tomorrow", "taskIds": []}
     },
-    "columnOrder": ["Backlog", "Today", "Tomorrow"]
+    "columnOrder": ["Backlog", "Today", "Tomorrow"],
+    "taskCounter": 3
 }

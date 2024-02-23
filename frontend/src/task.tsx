@@ -12,13 +12,28 @@ const Container = styled.div`
 
 export function Task(props) {
   const [editing, setEditing] = useState(false)
+  const [content, setContent] = useState(props.task.content)
 
-  const startEdit = () => {
+  function startEdit() {
     setEditing(true)
   }
 
-  const stopEdit = () => {
+  function stopEdit() {
     setEditing(false)
+
+    props.task.content = content
+
+    fetch("http://localhost:5000/updatetask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(props.task)
+    })
+  }
+
+  function handleChange(e) {
+    setContent(e.target.value)
   }
 
   return (
@@ -34,11 +49,12 @@ export function Task(props) {
           {editing ? (
             <input
               type="text"
-              value={props.task.content}
-              autofocus
+              value={content}
+              autoFocus
+              onChange={handleChange}
             />
           ) : (
-            props.task.content
+            content
           )}
         </Container>
       )}
