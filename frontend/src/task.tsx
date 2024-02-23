@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks'
+import { useState, useRef, useEffect } from 'preact/hooks'
 import { Draggable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
@@ -13,6 +13,12 @@ const Container = styled.div`
 export function Task(props) {
   const [editing, setEditing] = useState(false)
   const [content, setContent] = useState(props.task.content)
+  const inputRef = useRef()
+
+  useEffect(() => {
+    if (editing)
+      inputRef.current?.focus()
+  }, [editing])
 
   function startEdit() {
     setEditing(true)
@@ -36,6 +42,12 @@ export function Task(props) {
     setContent(e.target.value)
   }
 
+  function handleKeyPress(e) {
+    if (e.key === "Enter") {
+      inputRef.current.blur()
+    }
+  }
+
   return (
     <Draggable draggableId={props.task.id} index={props.index}>
       {provided => (
@@ -50,8 +62,9 @@ export function Task(props) {
             <input
               type="text"
               value={content}
-              autoFocus
               onChange={handleChange}
+              ref={inputRef}
+              onKeyPress={handleKeyPress}
             />
           ) : (
             content
