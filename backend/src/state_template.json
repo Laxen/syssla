@@ -9,8 +9,9 @@
     {
         "Backlog": {"id": "Backlog", "title": "Backlog", "taskIds": ["task-1", "task-2"]},
         "Today": {"id": "Today", "title": "Today", "taskIds": ["task-3"]},
-        "Tomorrow": {"id": "Tomorrow", "title": "Tomorrow", "taskIds": []}
+        "Tomorrow": {"id": "Tomorrow", "title": "Tomorrow", "taskIds": []},
+        "Done": { "id": "Done", "title": "Done", "taskIds": [] }
     },
-    "columnOrder": ["Backlog", "Today", "Tomorrow"],
+    "columnOrder": ["Backlog", "Today", "Tomorrow", "Done"],
     "taskCounter": 3
 }

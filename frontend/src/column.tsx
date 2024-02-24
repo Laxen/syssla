@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const Container = styled.div`
     margin: 8px;
-    border: 1px solid lightgrey;
+    border: 1px solid ${props => props.$done ? "grey" : "lightgrey"};
     border-radius: 2px;
     width: 220px;
 
@@ -14,6 +14,7 @@ const Container = styled.div`
 
 const Title = styled.h3`
     padding: 8px;
+    color: ${props => props.$done ? "grey" : "white"}
 `
 
 const TaskList = styled.div`
@@ -24,8 +25,8 @@ const TaskList = styled.div`
 
 export function Column(props) {
   return (
-    <Container>
-      <Title>{props.column.title}</Title>
+    <Container $done={props.column.title === "Done"}>
+      <Title $done={props.column.title === "Done"}>{props.column.title}</Title>
       <Droppable droppableId={props.column.id}>
         {provided => (
           <TaskList

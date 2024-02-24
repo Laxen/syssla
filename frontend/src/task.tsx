@@ -4,11 +4,16 @@ import styled from 'styled-components'
 import { StateContext } from './app'
 
 const Container = styled.div`
-  border: 1px solid lightgrey;
+  border: 1px solid ${p => p.$done ? "grey" : "lightgrey"};
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
   background-color: #242424;
+`
+
+const Title = styled.div`
+  color: ${p => p.$done ? "grey" : "lightgrey"};
+  ${props => props.$done ? "text-decoration: line-through;" : ""}
 `
 
 export function Task(props) {
@@ -79,6 +84,7 @@ export function Task(props) {
           ref={provided.innerRef}
           onClick={startEdit}
           onBlur={stopEdit}
+          $done={props.column.id === "Done"}
         >
           {editing ? (
             <input
@@ -89,7 +95,7 @@ export function Task(props) {
               onKeyPress={handleKeyPress}
             />
           ) : (
-            content
+            <Title $done={props.column.id === "Done"}>{content}</Title>
           )}
         </Container>
       )}
