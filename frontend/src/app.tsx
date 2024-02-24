@@ -59,10 +59,11 @@ export function App() {
     const start = state.columns[source.droppableId]
     const finish = state.columns[destination.droppableId]
 
-    // Move in same column
+    let newState
+
     if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds)
-      newTaskIds.splice(source.index, 1)
+      // Move in same column
+      const newTaskIds = start.taskIds.filter((_, i) => i != source.index)
       newTaskIds.splice(destination.index, 0, draggableId)
 
       const newColumn = {
@@ -70,49 +71,37 @@ export function App() {
         taskIds: newTaskIds
       }
 
-      const newState = {
+      newState = {
         ...state,
         columns: {
           ...state.columns,
           [newColumn.id]: newColumn,
         }
       };
-
-      fetch("http://localhost:5000/updatestate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newState)
-      })
-
-      setState(newState)
-      return
-    }
-
-    // Move between two columns
-    const startTaskIds = Array.from(start.taskIds)
-    startTaskIds.splice(source.index, 1)
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds
-    }
-
-    const finishTaskIds = Array.from(finish.taskIds)
-    finishTaskIds.splice(destination.index, 0, draggableId)
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds
-    }
-
-    const newState = {
-      ...state,
-      columns: {
-        ...state.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
+    } else {
+      // Move between two columns
+      const startTaskIds = start.taskIds.filter((_, i) => i != source.index)
+      const newStart = {
+        ...start,
+        taskIds: startTaskIds
       }
-    };
+
+      const finishTaskIds = Array.from(finish.taskIds)
+      finishTaskIds.splice(destination.index, 0, draggableId)
+      const newFinish = {
+        ...finish,
+        taskIds: finishTaskIds
+      }
+
+      newState = {
+        ...state,
+        columns: {
+          ...state.columns,
+          [newStart.id]: newStart,
+          [newFinish.id]: newFinish,
+        }
+      };
+    }
 
     fetch("http://localhost:5000/updatestate", {
       method: "POST",
