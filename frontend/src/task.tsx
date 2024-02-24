@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'preact/hooks'
+import { useState, useRef, useEffect, useContext } from 'preact/hooks'
 import { Draggable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+import { StateContext } from './app'
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -11,6 +12,7 @@ const Container = styled.div`
 `
 
 export function Task(props) {
+  const [state, setState] = useContext(StateContext)
   const [editing, setEditing] = useState(false)
   const [content, setContent] = useState(props.task.content)
   const inputRef = useRef()
@@ -34,8 +36,28 @@ export function Task(props) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(props.task)
+      body: JSON.stringify({
+        "task": props.task,
+        "column": props.column.id
+      })
     })
+
+    if (content == "") {
+      const newTaskIds = props.column.taskIds.filter(e => e != props.task.id)
+      const newColumn = {
+        ...props.column,
+        taskIds: newTaskIds,
+      }
+      const newState = {
+        ...state,
+        columns: {
+          ...state.columns,
+          [props.column.id]: newColumn,
+        }
+      }
+
+      setState(newState)
+    }
   }
 
   function handleChange(e) {

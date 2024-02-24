@@ -45,7 +45,14 @@ def updatestate():
 def addtask():
     state["taskCounter"] += 1
     task_id = f"task-{state['taskCounter']}"
-    state["tasks"][task_id] = {"content": "New", "id": task_id}
+
+    task = {
+        "id": task_id,
+        "content": "New",
+        "column": "Backlog"
+    }
+
+    state["tasks"][task_id] = task
     state["columns"]["Backlog"]["taskIds"].insert(0, task_id)
 
     _write_state()
@@ -54,8 +61,16 @@ def addtask():
 
 @app.route("/updatetask", methods=["POST"])
 def updatetask():
-    task = request.get_json()
-    state["tasks"][task["id"]] = task
+    body = request.get_json()
+    task = body["task"]
+    task_id = task["id"]
+    task_column = body["column"]
+
+    if not task["content"]:
+        del state["tasks"][task_id]
+        state["columns"][task_column]["taskIds"].remove(task_id)
+    else:
+        state["tasks"][task_id] = task
 
     _write_state()
 

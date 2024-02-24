@@ -32,7 +32,7 @@ export function Column(props) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} />)}
+            {props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} column={props.column} />)}
             {provided.placeholder}
           </TaskList>
         )}

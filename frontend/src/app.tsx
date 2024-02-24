@@ -1,3 +1,4 @@
+import { createContext } from 'preact'
 import { useState, useEffect } from 'preact/hooks'
 import preactLogo from './assets/preact.svg'
 import viteLogo from '/vite.svg'
@@ -6,6 +7,8 @@ import initialData from './initial-data'
 import { Column } from './column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+
+export const StateContext = createContext()
 
 const Container = styled.div`
   display: flex;
@@ -132,6 +135,7 @@ export function App() {
       <Container>
         <Button onClick={newTask}>New Task</Button>
       </Container>
+      <StateContext.Provider value={[state, setState]}>
         <DragDropContext
           onDragEnd={onDragEnd}
         >
@@ -144,6 +148,7 @@ export function App() {
             })}
           </Container>
         </DragDropContext>
+      </StateContext.Provider>
     </div>
   )
 }
