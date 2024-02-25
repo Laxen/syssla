@@ -11,32 +11,49 @@ import styled from 'styled-components'
 export const StateContext = createContext()
 let searchInterval = null;
 
-const Container = styled.div`
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const FlexContainer = styled.div`
   display: flex;
 `
 
 const Button = styled.button`
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: 2px;
+  border: 1px solid lightgrey;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #242424;
   cursor: pointer;
   transition: border-color 0.25s;
   margin-left: 8px;
+  color: white;
   &:hover {
     border-color: #646cff;
   }
 `
 
 const SearchBar = styled.input`
-  border: 1px solid white;
-  border-radius: 8px;
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+  background-color: #242424;
   flex: 1;
   margin-right: 8px;
   margin-left: 8px;
+  color: white;
+  padding: 8px;
+  font-size: 1em;
+`
+
+const AppTitle = styled.h1`
+  text-align: left;
+  color: white;
+  margin: 0px;
+  padding-left: 8px;
+  font-size: 50px;
 `
 
 export function App() {
@@ -59,7 +76,7 @@ export function App() {
     getState()
   }, [])
 
-  const onDragEnd = result => {
+  function onDragEnd(result) {
     const { destination, source, draggableId } = result
 
     if (!destination)
@@ -142,29 +159,30 @@ export function App() {
   }
 
   return (
-    <div>
-      <Container>
+    <AppContainer>
+      <AppTitle>SYSSLA</AppTitle>
+      <FlexContainer>
         <Button onClick={newTask}>New Task</Button>
         <SearchBar
           type="text"
           placeholder="Search"
           onChange={handleSearch}
         />
-      </Container>
+      </FlexContainer>
       <StateContext.Provider value={[state, setState]}>
         <DragDropContext
           onDragEnd={onDragEnd}
         >
-          <Container>
+          <FlexContainer>
             {state.columnOrder.map(columnId => {
               const column = state.columns[columnId]
               const tasks = column.taskIds.map(taskId => state.tasks[taskId])
 
               return <Column key={column.id} column={column} tasks={tasks} />
             })}
-          </Container>
+          </FlexContainer>
         </DragDropContext>
       </StateContext.Provider>
-    </div>
+    </AppContainer>
   )
 }

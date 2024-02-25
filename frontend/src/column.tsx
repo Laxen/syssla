@@ -2,7 +2,7 @@ import { Task } from './task'
 import { Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
-const Container = styled.div`
+const ColumnContainer = styled.div`
     margin: 8px;
     border: 1px solid ${props => props.$done ? "grey" : "lightgrey"};
     border-radius: 2px;
@@ -12,8 +12,7 @@ const Container = styled.div`
     flex-direction: column;
 `
 
-const Title = styled.h3`
-    padding: 8px;
+const ColumnTitle = styled.h3`
     color: ${props => props.$done ? "grey" : "white"}
 `
 
@@ -25,8 +24,8 @@ const TaskList = styled.div`
 
 export function Column(props) {
   return (
-    <Container $done={props.column.title === "Done"}>
-      <Title $done={props.column.title === "Done"}>{props.column.title}</Title>
+    <ColumnContainer $done={props.column.title === "Done"}>
+      <ColumnTitle $done={props.column.title === "Done"}>{props.column.title}</ColumnTitle>
       <Droppable droppableId={props.column.id}>
         {provided => (
           <TaskList
@@ -38,6 +37,6 @@ export function Column(props) {
           </TaskList>
         )}
       </Droppable>
-    </Container>
+    </ColumnContainer>
   )
 }

@@ -3,17 +3,17 @@ import { Draggable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { StateContext } from './app'
 
-const Container = styled.div`
+const TaskContainer = styled.div`
   display: flex;
   border: 1px solid ${p => p.$done ? "grey" : "lightgrey"};
   border-radius: 2px;
   padding: 8px;
-  margin-bottom: 8px;
+  margin-top: 8px;
   background-color: #242424;
 `
 
-const Title = styled.div`
-  color: ${p => p.$done ? "grey" : "lightgrey"};
+const TaskTitle = styled.div`
+  color: ${p => p.$done ? "grey" : "white"};
   ${props => props.$done ? "text-decoration: line-through;" : ""}
 `
 
@@ -22,6 +22,7 @@ const LabelContainer = styled.div`
 `
 
 const Label = styled.div`
+  color: ${p => p.$done ? "grey" : "lightgrey"};
   padding: 1px;
   margin: 1px;
   font-size: 10px;
@@ -89,7 +90,7 @@ export function Task(props) {
   return (
     <Draggable draggableId={props.task.id} index={props.index}>
       {provided => (
-        <Container
+        <TaskContainer
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
@@ -107,15 +108,15 @@ export function Task(props) {
             />
           ) : (
             <div>
-              <Title $done={props.column.id === "Done"}>{content}</Title>
+              <TaskTitle $done={props.column.id === "Done"}>{content}</TaskTitle>
               <LabelContainer>
                 {props.task.labels.map(label => {
-                  return <Label>{label}</Label>
+                  return <Label $done={props.column.id === "Done"}>{label}</Label>
                 })}
               </LabelContainer>
             </div>
           )}
-        </Container>
+        </TaskContainer>
       )}
     </Draggable>
   )
