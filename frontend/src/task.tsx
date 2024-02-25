@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { StateContext } from './app'
 
 const Container = styled.div`
+  display: flex;
   border: 1px solid ${p => p.$done ? "grey" : "lightgrey"};
   border-radius: 2px;
   padding: 8px;
@@ -14,6 +15,16 @@ const Container = styled.div`
 const Title = styled.div`
   color: ${p => p.$done ? "grey" : "lightgrey"};
   ${props => props.$done ? "text-decoration: line-through;" : ""}
+`
+
+const LabelContainer = styled.div`
+  display: flex;
+`
+
+const Label = styled.div`
+  padding: 1px;
+  margin: 1px;
+  font-size: 10px;
 `
 
 export function Task(props) {
@@ -95,7 +106,14 @@ export function Task(props) {
               onKeyPress={handleKeyPress}
             />
           ) : (
-            <Title $done={props.column.id === "Done"}>{content}</Title>
+            <div>
+              <Title $done={props.column.id === "Done"}>{content}</Title>
+              <LabelContainer>
+                {props.task.labels.map(label => {
+                  return <Label>{label}</Label>
+                })}
+              </LabelContainer>
+            </div>
           )}
         </Container>
       )}

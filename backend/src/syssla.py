@@ -1,22 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import json, sys
+import json, sys, copy
 
 app = Flask(__name__)
 CORS(app)
 
 state_file = "src/state.json"
 state = {}
-
-class Task:
-    def __init__(self, id, content, labels, column):
-        self.id = id
-        self.content = content
-        self.labels = labels
-        self.column = column
-
-    def to_json(self):
-        return {"id": self.id, "content": self.content}
 
 def _write_state():
     global state
@@ -30,7 +20,20 @@ def home():
 
 @app.route("/getstate")
 def getstate():
-    return state
+    label = request.args.get("label")
+
+    if not label:
+        return state
+
+    filtered_state = copy.deepcopy(state)
+
+    filtered_tasks = {key: value for key, value in filtered_state["tasks"].items() if label in value["labels"]}
+    filtered_state["tasks"] = filtered_tasks
+
+    for _, col in filtered_state["columns"].items():
+        col["taskIds"] = [taskid for taskid in col["taskIds"] if taskid in filtered_tasks]
+
+    return filtered_state
 
 @app.route("/updatestate", methods=["POST"])
 def updatestate():
@@ -49,7 +52,7 @@ def addtask():
     task = {
         "id": task_id,
         "content": "New",
-        "column": "Backlog"
+        "labels": []
     }
 
     state["tasks"][task_id] = task

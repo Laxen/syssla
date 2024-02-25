@@ -9,6 +9,7 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 
 export const StateContext = createContext()
+let searchInterval = null;
 
 const Container = styled.div`
   display: flex;
@@ -24,16 +25,30 @@ const Button = styled.button`
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  margin-left: 8px;
   &:hover {
     border-color: #646cff;
   }
 `
 
+const SearchBar = styled.input`
+  border: 1px solid white;
+  border-radius: 8px;
+  flex: 1;
+  margin-right: 8px;
+  margin-left: 8px;
+`
+
 export function App() {
   const [state, setState] = useState(initialData)
 
-  function getState() {
-    fetch("http://" + window.location.hostname + ":5000/getstate").then((res) =>
+  function getState(label="") {
+    let url = "http://" + window.location.hostname + ":5000/getstate"
+
+    if (label)
+      url += "?label=" + label
+
+    fetch(url).then((res) =>
       res.json().then((data) => {
         setState(data)
       })
@@ -119,10 +134,22 @@ export function App() {
     getState()
   }
 
+  function handleSearch(e) {
+    clearTimeout(searchInterval)
+    searchInterval = setTimeout(() => {
+      getState(e.target.value)
+    }, 250)
+  }
+
   return (
     <div>
       <Container>
         <Button onClick={newTask}>New Task</Button>
+        <SearchBar
+          type="text"
+          placeholder="Search"
+          onChange={handleSearch}
+        />
       </Container>
       <StateContext.Provider value={[state, setState]}>
         <DragDropContext
