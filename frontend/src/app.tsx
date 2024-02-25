@@ -110,6 +110,20 @@ export function App() {
           [newColumn.id]: newColumn,
         }
       };
+
+      fetch("http://" + window.location.hostname + ":5000/movetask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "taskId": draggableId,
+          "startCol": source.droppableId,
+          "endCol": destination.droppableId,
+          "startIndex": source.index,
+          "endIndex": destination.index
+        })
+      })
     } else {
       // Move between two columns
       const startTaskIds = start.taskIds.filter((_, i) => i != source.index)
@@ -133,15 +147,21 @@ export function App() {
           [newFinish.id]: newFinish,
         }
       };
-    }
 
-    fetch("http://" + window.location.hostname + ":5000/updatestate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newState)
-    })
+      fetch("http://" + window.location.hostname + ":5000/movetask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "taskId": draggableId,
+          "startCol": source.droppableId,
+          "endCol": destination.droppableId,
+          "startIndex": source.index,
+          "endIndex": destination.index
+        })
+      })
+    }
 
     setState(newState)
   }

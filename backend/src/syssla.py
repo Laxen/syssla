@@ -44,6 +44,24 @@ def updatestate():
 
     return "OK"
 
+@app.route("/movetask", methods=["POST"])
+def movetask():
+    global state
+
+    move = request.get_json()
+    task_id = move["taskId"]
+    start_col = move["startCol"]
+    end_col = move["endCol"]
+    start_index = move["startIndex"]
+    end_index = move["endIndex"]
+
+    del state["columns"][start_col]["taskIds"][start_index]
+    state["columns"][end_col]["taskIds"].insert(end_index, task_id)
+
+    _write_state()
+
+    return "OK"
+
 @app.route("/addtask")
 def addtask():
     state["taskCounter"] += 1
