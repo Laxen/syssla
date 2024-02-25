@@ -33,7 +33,7 @@ export function App() {
   const [state, setState] = useState(initialData)
 
   function getState() {
-    fetch("http://localhost:5000/getstate").then((res) =>
+    fetch("http://" + window.location.hostname + ":5000/getstate").then((res) =>
       res.json().then((data) => {
         setState(data)
       })
@@ -103,7 +103,7 @@ export function App() {
       };
     }
 
-    fetch("http://localhost:5000/updatestate", {
+    fetch("http://" + window.location.hostname + ":5000/updatestate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -115,7 +115,7 @@ export function App() {
   }
 
   function newTask() {
-    fetch("http://localhost:5000/addtask")
+    fetch("http://" + window.location.hostname + ":5000/addtask")
     getState()
   }
 

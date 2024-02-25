@@ -85,7 +85,7 @@ def main():
     except FileNotFoundError:
         print("ERROR: Missing state.json")
         sys.exit()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
 
 if __name__ == "__main__":
     main()

@@ -36,7 +36,7 @@ export function Task(props) {
 
     props.task.content = content
 
-    fetch("http://localhost:5000/updatetask", {
+    fetch("http://" + window.location.hostname + ":5000/updatetask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
