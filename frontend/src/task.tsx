@@ -13,20 +13,34 @@ const TaskContainer = styled.div`
   flex-direction: column;
 `
 
-const TaskTitle = styled.div`
+const TaskContent = styled.div`
+  font-size: 16px;
+  text-align: left;
   color: ${p => p.$done ? "grey" : "white"};
   ${props => props.$done ? "text-decoration: line-through;" : ""}
+`
+
+const TaskContentInput = styled.input`
+  font-size: 16px;
+  color: white;
+  background-color: #242424;
+  flex: 1;
+  width: calc(100% - 8px);
+`
+
+const TaskLabel = styled.div`
+  font-size: 11px;
   text-align: left;
-`
-
-const LabelContainer = styled.div`
-  display: flex;
-`
-
-const Label = styled.div`
   color: ${p => p.$done ? "grey" : "lightgrey"};
   margin-right: 3px;
+`
+
+const TaskLabelInput = styled.input`
+  color: white;
+  background-color: #242424;
   font-size: 11px;
+  flex: 1;
+  width: calc(100% - 8px);
 `
 
 export function Task(props) {
@@ -111,7 +125,7 @@ export function Task(props) {
         >
           <div>
             {editContent ? (
-              <input
+              <TaskContentInput
                 type="text"
                 value={content}
                 onChange={handleChangeContent}
@@ -119,21 +133,19 @@ export function Task(props) {
                 onKeyPress={handleKeyPress}
               />
             ) : (
-              <TaskTitle onClick={startEdit} $done={props.column.id === "Done"}>{content}</TaskTitle>
+              <TaskContent onClick={startEdit} $done={props.column.id === "Done"}>{content}</TaskContent>
             )}
-            <LabelContainer>
-              {editLabels ? (
-                <input
-                  type="text"
-                  value={labels.join(" ")}
-                  onChange={handleChangeLabels}
-                  ref={inputRef}
-                  onKeyPress={handleKeyPress}
-                />
-              ) : (
-                <Label onClick={() => {setEditLabels(true)}} $done={props.column.id === "Done"}>{"| " + labels.join(" ") + " |"}</Label>
-              )}
-            </LabelContainer>
+            {editLabels ? (
+              <TaskLabelInput
+                type="text"
+                value={labels.join(" ")}
+                onChange={handleChangeLabels}
+                ref={inputRef}
+                onKeyPress={handleKeyPress}
+              />
+            ) : (
+              <TaskLabel onClick={() => {setEditLabels(true)}} $done={props.column.id === "Done"}>{"| " + labels.join(" ") + " |"}</TaskLabel>
+            )}
           </div>
         </TaskContainer>
       )}
