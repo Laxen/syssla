@@ -26,28 +26,35 @@ const LabelContainer = styled.div`
 const Label = styled.div`
   color: ${p => p.$done ? "grey" : "lightgrey"};
   margin-right: 3px;
-  font-size: 10px;
+  font-size: 11px;
 `
 
 export function Task(props) {
   const [state, setState] = useContext(StateContext)
-  const [editing, setEditing] = useState(false)
+
+  const [editContent, setEditContent] = useState(false)
   const [content, setContent] = useState(props.task.content)
+
+  const [editLabels, setEditLabels] = useState(false)
+  const [labels, setLabels] = useState(props.task.labels)
+
   const inputRef = useRef()
 
   useEffect(() => {
-    if (editing)
+    if (editContent || editLabels)
       inputRef.current?.focus()
-  }, [editing])
+  }, [editContent, editLabels])
 
   function startEdit() {
-    setEditing(true)
+    setEditContent(true)
   }
 
   function stopEdit() {
-    setEditing(false)
+    setEditContent(false)
+    setEditLabels(false)
 
     props.task.content = content
+    props.task.labels = labels
 
     fetch("http://" + window.location.hostname + ":5000/updatetask", {
       method: "POST",
@@ -78,8 +85,12 @@ export function Task(props) {
     }
   }
 
-  function handleChange(e) {
+  function handleChangeContent(e) {
     setContent(e.target.value)
+  }
+
+  function handleChangeLabels(e) {
+    setLabels(e.target.value.split(" "))
   }
 
   function handleKeyPress(e) {
@@ -95,28 +106,35 @@ export function Task(props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          onClick={startEdit}
           onBlur={stopEdit}
           $done={props.column.id === "Done"}
         >
-          {editing ? (
-            <input
-              type="text"
-              value={content}
-              onChange={handleChange}
-              ref={inputRef}
-              onKeyPress={handleKeyPress}
-            />
-          ) : (
-            <div>
-              <TaskTitle $done={props.column.id === "Done"}>{content}</TaskTitle>
-              <LabelContainer>
-                {props.task.labels.map(label => {
-                  return <Label $done={props.column.id === "Done"}>{label}</Label>
-                })}
-              </LabelContainer>
-            </div>
-          )}
+          <div>
+            {editContent ? (
+              <input
+                type="text"
+                value={content}
+                onChange={handleChangeContent}
+                ref={inputRef}
+                onKeyPress={handleKeyPress}
+              />
+            ) : (
+              <TaskTitle onClick={startEdit} $done={props.column.id === "Done"}>{content}</TaskTitle>
+            )}
+            <LabelContainer>
+              {editLabels ? (
+                <input
+                  type="text"
+                  value={labels.join(" ")}
+                  onChange={handleChangeLabels}
+                  ref={inputRef}
+                  onKeyPress={handleKeyPress}
+                />
+              ) : (
+                <Label onClick={() => {setEditLabels(true)}} $done={props.column.id === "Done"}>{"| " + labels.join(" ") + " |"}</Label>
+              )}
+            </LabelContainer>
+          </div>
         </TaskContainer>
       )}
     </Draggable>
