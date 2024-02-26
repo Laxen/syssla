@@ -18,6 +18,15 @@ def _write_state():
 def home():
   return "Welcome to Syssla!"
 
+@app.route("/reload")
+def reload():
+    global state
+
+    with open(state_file, "r") as f:
+        state = json.load(f)
+
+    return "OK"
+
 @app.route("/getstate")
 def getstate():
     label = request.args.get("label")
@@ -52,10 +61,9 @@ def movetask():
     task_id = move["taskId"]
     start_col = move["startCol"]
     end_col = move["endCol"]
-    start_index = move["startIndex"]
     end_index = move["endIndex"]
 
-    del state["columns"][start_col]["taskIds"][start_index]
+    state["columns"][start_col]["taskIds"].remove(task_id)
     state["columns"][end_col]["taskIds"].insert(end_index, task_id)
 
     _write_state()

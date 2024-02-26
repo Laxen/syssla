@@ -10,11 +10,13 @@ const TaskContainer = styled.div`
   padding: 8px;
   margin-top: 8px;
   background-color: #242424;
+  flex-direction: column;
 `
 
 const TaskTitle = styled.div`
   color: ${p => p.$done ? "grey" : "white"};
   ${props => props.$done ? "text-decoration: line-through;" : ""}
+  text-align: left;
 `
 
 const LabelContainer = styled.div`
@@ -23,8 +25,7 @@ const LabelContainer = styled.div`
 
 const Label = styled.div`
   color: ${p => p.$done ? "grey" : "lightgrey"};
-  padding: 1px;
-  margin: 1px;
+  margin-right: 3px;
   font-size: 10px;
 `
 
