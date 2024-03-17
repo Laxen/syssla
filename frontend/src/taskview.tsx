@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useState } from 'preact/hooks'
 
 const TaskViewContainer = styled.div`
   border: 1px solid lightgrey;
@@ -42,16 +43,43 @@ const TaskInput = styled.input`
 `
 
 export function TaskView(props) {
+  const [content, setContent] = useState(props.task.content)
+  const [labels, setLabels] = useState(props.task.labels)
+
+  function updateTask(event) {
+    props.task.content = content
+    props.task.labels = labels
+
+    fetch("http://" + window.location.hostname + ":5000/updatetask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "task": props.task,
+        "column": null
+      })
+    })
+  }
+
   return (
-    <TaskViewContainer>
+    <TaskViewContainer
+      onBlur={updateTask}
+    >
       <TaskViewTitle>Edit Task</TaskViewTitle>
       <TaskFieldContainer>
         <TaskLabel>Title:</TaskLabel>
-        <TaskInput value={props.task.content} />
+        <TaskInput
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
       </TaskFieldContainer>
       <TaskFieldContainer>
         <TaskLabel>Labels:</TaskLabel>
-        <TaskInput value={props.task.labels.join(" ")} />
+        <TaskInput
+          value={labels.join(" ")}
+          onChange={(e) => setLabels(e.target.value.split(" "))}
+        />
       </TaskFieldContainer>
     </TaskViewContainer>
   )

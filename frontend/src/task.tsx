@@ -59,6 +59,11 @@ export function Task(props) {
       inputRef.current?.focus()
   }, [editContent, editLabels])
 
+  useEffect(() => {
+    setContent(props.task.content)
+    setLabels(props.task.labels)
+  }, [props.task.content, props.task.labels])
+
   function startEdit() {
     setEditContent(true)
   }
