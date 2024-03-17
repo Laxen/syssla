@@ -206,7 +206,7 @@ export function App() {
           onChange={handleSearch}
         />
       </FlexContainer>
-      <StateContext.Provider value={[state, setState, setSelectedTask]}>
+      <StateContext.Provider value={[setSelectedTask]}>
         <DragDropContext
           onDragEnd={onDragEnd}
         >
