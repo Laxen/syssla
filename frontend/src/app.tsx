@@ -70,6 +70,10 @@ export function App() {
     }
 
     document.addEventListener("mousedown", handleClickOutside)
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [taskViewRef])
 
   function getState(label="") {
