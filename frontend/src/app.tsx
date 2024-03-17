@@ -69,10 +69,17 @@ export function App() {
       }
     }
 
+    function handleKeyPress(e) {
+      if (e.key === "Enter")
+        setSelectedTask(null)
+    }
+
     document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("keypress", handleKeyPress)
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keypress", handleKeyPress);
     };
   }, [taskViewRef])
 
