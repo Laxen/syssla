@@ -44,7 +44,7 @@ const TaskLabelInput = styled.input`
 `
 
 export function Task(props) {
-  const [state, setState] = useContext(StateContext)
+  const [state, setState, setSelectedTask] = useContext(StateContext)
 
   const [editContent, setEditContent] = useState(false)
   const [content, setContent] = useState(props.task.content)
@@ -122,6 +122,7 @@ export function Task(props) {
           ref={provided.innerRef}
           onBlur={stopEdit}
           $done={props.column.id === "Done"}
+          onClick={() => setSelectedTask(props.task)}
         >
           <div>
             {editContent ? (
@@ -133,7 +134,7 @@ export function Task(props) {
                 onKeyPress={handleKeyPress}
               />
             ) : (
-              <TaskContent onClick={startEdit} $done={props.column.id === "Done"}>{content}</TaskContent>
+              <TaskContent $done={props.column.id === "Done"}>{content}</TaskContent>
             )}
             {editLabels ? (
               <TaskLabelInput
@@ -144,7 +145,7 @@ export function Task(props) {
                 onKeyPress={handleKeyPress}
               />
             ) : (
-              <TaskLabel onClick={() => {setEditLabels(true)}} $done={props.column.id === "Done"}>{"| " + labels.join(" ") + " |"}</TaskLabel>
+              <TaskLabel $done={props.column.id === "Done"}>{"| " + labels.join(" ") + " |"}</TaskLabel>
             )}
           </div>
         </TaskContainer>

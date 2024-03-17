@@ -1,5 +1,5 @@
 import { createContext } from 'preact'
-import { useState, useEffect } from 'preact/hooks'
+import { useState, useEffect, useRef } from 'preact/hooks'
 import preactLogo from './assets/preact.svg'
 import viteLogo from '/vite.svg'
 import './app.css'
@@ -7,6 +7,7 @@ import initialData from './initial-data'
 import { Column } from './column'
 import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+import { TaskView } from './taskview'
 
 export const StateContext = createContext()
 let searchInterval = null;
@@ -58,6 +59,18 @@ const AppTitle = styled.h1`
 
 export function App() {
   const [state, setState] = useState(initialData)
+  const [selectedTask, setSelectedTask] = useState(null)
+  const taskViewRef = useRef(null)
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (taskViewRef.current && !taskViewRef.current.contains(event.target)) {
+        setSelectedTask(null)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+  }, [taskViewRef])
 
   function getState(label="") {
     let url = "http://" + window.location.hostname + ":5000/getstate"
@@ -167,8 +180,12 @@ export function App() {
   }
 
   function newTask() {
+    const taskCounter = state["taskCounter"]
+
     fetch("http://" + window.location.hostname + ":5000/addtask")
     getState()
+
+    setSelectedTask(state.tasks["task-" + taskCounter])
   }
 
   function handleSearch(e) {
@@ -189,7 +206,7 @@ export function App() {
           onChange={handleSearch}
         />
       </FlexContainer>
-      <StateContext.Provider value={[state, setState]}>
+      <StateContext.Provider value={[state, setState, setSelectedTask]}>
         <DragDropContext
           onDragEnd={onDragEnd}
         >
@@ -203,6 +220,11 @@ export function App() {
           </FlexContainer>
         </DragDropContext>
       </StateContext.Provider>
+      {selectedTask != null && (
+        <div ref={taskViewRef}> { /* Wrap TaskView in div to get ref to work properly */ }
+          <TaskView task={selectedTask} />
+        </div>
+      )}
     </AppContainer>
   )
 }
