@@ -45,10 +45,12 @@ const TaskInput = styled.input`
 export function TaskView(props) {
   const [content, setContent] = useState(props.task.content)
   const [labels, setLabels] = useState(props.task.labels)
+  const [description, setDescription] = useState(props.task.description)
 
   function updateTask(event) {
     props.task.content = content
     props.task.labels = labels
+    props.task.description = description
 
     fetch("http://" + window.location.hostname + ":5000/updatetask", {
       method: "POST",
@@ -81,6 +83,10 @@ export function TaskView(props) {
           onChange={(e) => setLabels(e.target.value.split(" "))}
         />
       </TaskFieldContainer>
+      <TaskInput
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
     </TaskViewContainer>
   )
 }

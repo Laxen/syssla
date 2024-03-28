@@ -78,7 +78,8 @@ def addtask():
     task = {
         "id": task_id,
         "content": "New",
-        "labels": []
+        "labels": [],
+        "description": ""
     }
 
     state["tasks"][task_id] = task
