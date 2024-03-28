@@ -7,7 +7,7 @@ const TaskContainer = styled.div`
   display: flex;
   border: 1px solid ${p => p.$done ? "grey" : "lightgrey"};
   border-radius: 2px;
-  padding: 8px;
+  padding: 2px 8px 2px;
   margin-top: 8px;
   background-color: #242424;
   flex-direction: column;
@@ -18,13 +18,13 @@ const TaskContent = styled.div`
   text-align: left;
   color: ${p => p.$done ? "grey" : "white"};
   ${props => props.$done ? "text-decoration: line-through;" : ""}
+  margin: -3px 0px -5px;
 `
 
 const TaskLabel = styled.div`
   font-size: 11px;
   text-align: left;
   color: ${p => p.$done ? "grey" : "lightgrey"};
-  margin-right: 3px;
 `
 
 export function Task(props) {

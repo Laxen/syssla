@@ -1,6 +1,7 @@
 import { Task } from './task'
 import { Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+import { useState } from 'preact/hooks'
 
 const ColumnContainer = styled.div`
     margin: 8px;
@@ -23,20 +24,24 @@ const TaskList = styled.div`
 `
 
 export function Column(props) {
+  const [collapsed, setCollapsed] = useState(false)
+
   return (
     <ColumnContainer $done={props.column.title === "Done"}>
-      <ColumnTitle $done={props.column.title === "Done"}>{props.column.title}</ColumnTitle>
-      <Droppable droppableId={props.column.id}>
-        {provided => (
-          <TaskList
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} column={props.column} />)}
-            {provided.placeholder}
-          </TaskList>
-        )}
-      </Droppable>
+      <ColumnTitle $done={props.column.title === "Done"} onClick={() => setCollapsed(!collapsed)}>{props.column.title}</ColumnTitle>
+      {!collapsed && (
+        <Droppable droppableId={props.column.id}>
+          {provided => (
+            <TaskList
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} column={props.column} />)}
+              {provided.placeholder}
+            </TaskList>
+          )}
+        </Droppable>
+      )}
     </ColumnContainer>
   )
 }

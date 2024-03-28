@@ -18,6 +18,7 @@ const AppContainer = styled.div`
 `
 const FlexContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `
 
 const Button = styled.button`
