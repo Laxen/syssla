@@ -30,6 +30,11 @@ const TaskLabel = styled.div`
 export function Task(props) {
   const [setSelectedTask] = useContext(StateContext)
 
+  function selectTask() {
+    props.task.column = props.column.id
+    setSelectedTask(props.task)
+  }
+
   return (
     <Draggable draggableId={props.task.id} index={props.index}>
       {provided => (
@@ -38,7 +43,7 @@ export function Task(props) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           $done={props.column.id === "Done"}
-          onClick={() => setSelectedTask(props.task)}
+          onClick={selectTask}
         >
           <TaskContent $done={props.column.id === "Done"}>{props.task.content}</TaskContent>
           <TaskLabel $done={props.column.id === "Done"}>{"| " + props.task.labels.join(" ") + " |"}</TaskLabel>

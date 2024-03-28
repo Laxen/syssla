@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { useState } from 'preact/hooks'
 
 const TaskViewContainer = styled.div`
   border: 1px solid lightgrey;
@@ -43,49 +42,28 @@ const TaskInput = styled.input`
 `
 
 export function TaskView(props) {
-  const [content, setContent] = useState(props.task.content)
-  const [labels, setLabels] = useState(props.task.labels)
-  const [description, setDescription] = useState(props.task.description)
-
-  function updateTask(event) {
-    props.task.content = content
-    props.task.labels = labels
-    props.task.description = description
-
-    fetch("http://" + window.location.hostname + ":5000/updatetask", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "task": props.task,
-        "column": null
-      })
-    })
-  }
-
   return (
     <TaskViewContainer
-      onBlur={updateTask}
+      onBlur={() => props.updateTask(props.task)}
     >
       <TaskViewTitle>Edit Task</TaskViewTitle>
       <TaskFieldContainer>
         <TaskLabel>Title:</TaskLabel>
         <TaskInput
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          value={props.task.content}
+          onChange={(e) => props.task.content = e.target.value}
         />
       </TaskFieldContainer>
       <TaskFieldContainer>
         <TaskLabel>Labels:</TaskLabel>
         <TaskInput
-          value={labels.join(" ")}
-          onChange={(e) => setLabels(e.target.value.split(" "))}
+          value={props.task.labels.join(" ")}
+          onChange={(e) => props.task.labels = e.target.value.split(" ")}
         />
       </TaskFieldContainer>
       <TaskInput
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={props.task.description}
+        onChange={(e) => props.task.description = e.target.value}
       />
     </TaskViewContainer>
   )

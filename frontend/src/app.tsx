@@ -200,6 +200,41 @@ export function App() {
     setSelectedTask(state.tasks["task-" + taskCounter])
   }
 
+  function updateTask(task) {
+    fetch("http://" + window.location.hostname + ":5000/updatetask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "task": task,
+        "column": task.column
+      })
+    })
+
+    if (task.content === "") {
+      const newTasks = { ...state.tasks }
+      delete newTasks[task.id]
+
+      const newTaskIds = state.columns[task.column].taskIds.filter(id => id !== task.id)
+      const newColumn = {
+        ...state.columns[task.column],
+        taskIds: newTaskIds
+      }
+
+      const newState = {
+        ...state,
+        tasks: newTasks,
+        columns: {
+          ...state.columns,
+          [task.column]: newColumn
+        }
+      }
+
+      setState(newState)
+    }
+  }
+
   function handleSearch(e) {
     clearTimeout(searchInterval)
     searchInterval = setTimeout(() => {
@@ -234,7 +269,7 @@ export function App() {
       </StateContext.Provider>
       {selectedTask != null && (
         <div ref={taskViewRef}> { /* Wrap TaskView in div to get ref to work properly */ }
-          <TaskView task={selectedTask} />
+          <TaskView task={selectedTask} updateTask={updateTask} />
         </div>
       )}
     </AppContainer>
